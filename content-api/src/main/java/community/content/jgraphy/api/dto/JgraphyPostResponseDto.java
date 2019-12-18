@@ -2,6 +2,7 @@ package community.content.jgraphy.api.dto;
 
 import java.time.ZonedDateTime;
 
+import community.content.jgraphy.domain.JgraphyPost;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,4 +27,17 @@ public class JgraphyPostResponseDto {
     this.createdAt = createdAt;
     this.updatedAt = updatedAt;
   }
+
+  private JgraphyPostResponseDto(JgraphyPost jgraphyPost) {
+      this.id = jgraphyPost.getId();
+      this.title = jgraphyPost.getTitle();
+      this.content = jgraphyPost.getContent();
+      this.createdAt = jgraphyPost.getCreatedAt();
+      this.updatedAt = jgraphyPost.getUpdatedAt();
+  }
+
+  public static JgraphyPostResponseDto from(JgraphyPost jgraphyPost) {
+      return new JgraphyPostResponseDto(jgraphyPost);
+  }
+
 }

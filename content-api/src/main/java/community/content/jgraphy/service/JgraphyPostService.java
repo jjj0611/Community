@@ -1,8 +1,5 @@
 package community.content.jgraphy.service;
 
-import static community.content.jgraphy.service.JgraphyPostService.JgraphyPostAssembler.toEntity;
-import static community.content.jgraphy.service.JgraphyPostService.JgraphyPostAssembler.toResponseDto;
-
 import community.content.jgraphy.api.dto.JgraphyPostRequestDto;
 import community.content.jgraphy.api.dto.JgraphyPostResponseDto;
 import community.content.jgraphy.domain.JgraphyPost;
@@ -22,16 +19,16 @@ public class JgraphyPostService {
   private final JgraphyPostRepository jgraphyPostRepository;
 
   public Page<JgraphyPostResponseDto> readPostPage(Pageable pageable) {
-    return jgraphyPostRepository.findAll(pageable).map(JgraphyPostAssembler::toResponseDto);
+    return jgraphyPostRepository.findAll(pageable).map(JgraphyPostResponseDto::from);
   }
 
   public Long createPost(JgraphyPostRequestDto jgraphyPostRequestDto) {
-    return jgraphyPostRepository.save(toEntity(jgraphyPostRequestDto)).getId();
+    return jgraphyPostRepository.save(JgraphyPostRequestDto.from(jgraphyPostRequestDto)).getId();
   }
 
   public JgraphyPostResponseDto readPost(Long id) {
     JgraphyPost jgraphyPost = findJgraphyPostById(id);
-    return toResponseDto(jgraphyPost);
+    return JgraphyPostResponseDto.from(jgraphyPost);
   }
 
   public void deletePost(Long id) {
@@ -42,31 +39,11 @@ public class JgraphyPostService {
   @Transactional
   public void updatePost(Long id, JgraphyPostRequestDto jgraphyPostRequestDto) {
     JgraphyPost jgraphyPost = findJgraphyPostById(id);
-    JgraphyPost updateValue = toEntity(jgraphyPostRequestDto);
+    JgraphyPost updateValue = JgraphyPostRequestDto.from(jgraphyPostRequestDto);
     jgraphyPost.update(updateValue);
   }
 
   private JgraphyPost findJgraphyPostById(Long id) {
     return jgraphyPostRepository.findById(id).orElseThrow(() -> new JgraphyPostNotFoundException(id));
   }
-
-  protected static class JgraphyPostAssembler {
-    static JgraphyPost toEntity(JgraphyPostRequestDto jgraphyPostRequestDto) {
-      return JgraphyPost.builder()
-          .title(jgraphyPostRequestDto.getTitle())
-          .content(jgraphyPostRequestDto.getContent())
-          .build();
-    }
-
-    static JgraphyPostResponseDto toResponseDto(JgraphyPost jgrpahyPost) {
-      return JgraphyPostResponseDto.builder()
-          .id(jgrpahyPost.getId())
-          .title(jgrpahyPost.getTitle())
-          .content(jgrpahyPost.getContent())
-          .createdAt(jgrpahyPost.getCreatedAt())
-          .updatedAt(jgrpahyPost.getUpdatedAt())
-          .build();
-    }
-  }
-
 }

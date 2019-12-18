@@ -2,7 +2,6 @@ package community.content.jgraphy.service;
 
 import static community.content.jgraphy.api.dto.JgraphyPostRequestDtoTest.getJgraphyPostRequestDtoFixture;
 import static community.content.jgraphy.domain.JgraphyPostTest.getJgraphyPostFixture;
-import static community.content.jgraphy.service.JgraphyPostService.JgraphyPostAssembler.toEntity;
 import static org.assertj.core.api.BDDAssertions.then;
 import static org.assertj.core.api.BDDAssertions.thenThrownBy;
 import static org.mockito.ArgumentMatchers.any;
@@ -32,7 +31,8 @@ import org.springframework.test.util.ReflectionTestUtils;
 class JgraphyPostServiceTest {
   private JgraphyPostService jgraphyPostService;
 
-  private @Mock JgraphyPostRepository jgraphyPostRepository;
+  private @Mock
+  JgraphyPostRepository jgraphyPostRepository;
 
   @BeforeEach
   void setUp() {
@@ -79,7 +79,7 @@ class JgraphyPostServiceTest {
     // given
     JgraphyPostRequestDto jgraphyPostRequestDto = new JgraphyPostRequestDto();
 
-    thenThrownBy(() -> toEntity(jgraphyPostRequestDto)).isExactlyInstanceOf(IllegalArgumentException.class);
+    thenThrownBy(() -> JgraphyPostRequestDto.from(jgraphyPostRequestDto)).isExactlyInstanceOf(IllegalArgumentException.class);
   }
 
   @Test
